@@ -8,10 +8,49 @@
 </head>
 <body>
 
-  <div class="scene active" id="scene1">Loading...</div>
-  <div class="scene" id="scene2"><h1>Happy Birthday!</h1></div>
-  <div class="scene" id="scene3">Oh wait, that's not right... Where is the rest of the file?</div>
-  <div class="scene" id="scene4">Real page goes here</div>
+<div class="scene active" id="terminal"></div>
+<div id="page">
+  <h1>Real page goes here</h1>
+</div>
+
+<template id="man-tpl">
+  <svg class="man" viewBox="0 0 60 120" width="60" height="120">
+    <g class="body">
+      <circle cx="30" cy="16" r="12"/>
+            <g class="face">
+        <circle cx="25.5" cy="14" r="1.8"/>
+        <circle cx="34.5" cy="14" r="1.8"/>
+        <path d="M24 20 Q30 26 36 20"/>
+      </g>
+      <line x1="30" y1="28" x2="30" y2="70"/>
+      <g class="arm arm-l">
+        <line x1="30" y1="36" x2="30" y2="58"/>
+        <g class="fore"><line x1="30" y1="58" x2="30" y2="80"/></g>
+      </g>
+      <g class="arm arm-r">
+        <line x1="30" y1="36" x2="30" y2="58"/>
+        <g class="fore"><line x1="30" y1="58" x2="30" y2="80"/></g>
+      </g>
+      <g class="leg leg-l">
+        <line x1="30" y1="70" x2="30" y2="92"/>
+        <g class="shin"><line x1="30" y1="92" x2="30" y2="114"/></g>
+      </g>
+      <g class="leg leg-r">
+        <line x1="30" y1="70" x2="30" y2="92"/>
+        <g class="shin"><line x1="30" y1="92" x2="30" y2="114"/></g>
+      </g>
+            <path class="rope" d="M -8 58 Q -50 64 -90 58"/>
+      <circle class="fist" cx="-8" cy="58" r="2"/>
+    </g>
+    <g class="bubble">
+      <rect x="50" y="-46" width="40" height="26" rx="8"/>
+      <polygon points="54,-21 64,-21 52,-9"/>
+      <text x="70" y="-28" text-anchor="middle">hi!</text>
+    </g>
+  </svg>
+</template>
+
+<script src="script.js"></script>
 
   <script src="script.js"></script>
 </body>
