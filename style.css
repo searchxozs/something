@@ -1,0 +1,7 @@
+.scene {
+  display: none;
+}
+
+.scene.active {
+  display: block;
+}
