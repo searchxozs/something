@@ -39,3 +39,115 @@ html, body { margin: 0; height: 100%; background: #000; }
   animation: blink 1s steps(1) infinite;
 }
 @keyframes blink { 50% { opacity: 0; } }
+
+/* error and meme pop-ups */
+.popup {
+  position: fixed;
+  width: min(280px, 78vw);
+  background: #2b2b2b;
+  border: 1px solid #555;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+  color: #eee;
+  font: 14px "Courier New", Consolas, monospace;
+  overflow: hidden;
+  animation: pop 0.12s ease-out;
+}
+@keyframes pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.popup .bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: #8a1f1f;
+  font-weight: bold;
+}
+.popup.meme .bar { background: #1f3f8a; }
+.popup .x { cursor: pointer; padding: 0 4px; }
+
+.popup .body {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 14px 12px 8px;
+}
+.popup .icon { font-size: 26px; line-height: 1; }
+.popup .msg  { line-height: 1.4; word-break: break-word; }
+
+.popup .actions { padding: 0 12px 12px; text-align: right; }
+.popup button {
+  padding: 5px 18px;
+  background: #444;
+  color: #eee;
+  border: 1px solid #777;
+  border-radius: 4px;
+  font: inherit;
+  cursor: pointer;
+}
+.popup button:hover { background: #555; }
+
+.popup img {
+  display: block;
+  width: 100%;
+  max-height: 40vh;
+  object-fit: contain;
+  background: #000;
+}
+
+/* new pop-up kinds */
+.popup.code .bar    { background: #1f6f4a; }
+.popup.caption .bar { background: #6a2f8a; }
+.popup.choice .bar  { background: #8a5a1f; }
+
+.popup .code {
+  margin: 0;
+  padding: 12px;
+  background: #0d1117;
+  color: #9be9a8;
+  font: 13px "Courier New", Consolas, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.popup .caption {
+  padding: 14px 12px;
+  background: #111;
+  text-align: center;
+}
+.popup .caption .top,
+.popup .caption .bottom {
+  font: 900 18px Impact, "Arial Black", sans-serif;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+.popup .caption .emoji { font-size: 56px; margin: 8px 0; line-height: 1.1; }
+
+/* birthday confirmation window */
+#overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.popup.check { position: static; width: min(340px, 90vw); }
+.popup.check .bar { background: #1f3f8a; }
+.popup .field { padding: 0 12px 6px; }
+.popup .field input {
+  width: 100%;
+  padding: 8px;
+  background: #0d1117;
+  color: #39ff14;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font: 16px "Courier New", Consolas, monospace;
+}
+.popup .note { padding: 0 12px; min-height: 22px; color: #ff6b6b; font-size: 13px; }
