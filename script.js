@@ -310,10 +310,169 @@ function showBirthdayCheck() {
   input.focus();
 }
 
+const TERMS = [
+  ["1. Acceptance of Terms", "By clicking \"I agree\" you agree to these terms. By clicking \"I disagree\" you also agree to these terms, because you don't really have a choice."],
+  ["2. Definition of Birthday", "A recurring event in which the user increments by one (age++). No overflow has been detected so far."],
+  ["3. Cake", "The user shall accept all cake offered. Cake cannot be debugged, only eaten. Compile errors in the cake are considered flavor."],
+  ["4. Bugs", "Any bug found on this website is a feature. Any feature not found is scheduled for version 2.0."],
+  ["5. Memes", "The user agrees to laugh at least once. Memes cannot be unseen, and refunds are not available for jokes found unfunny."],
+  ["6. Data Collection", "We collect nothing, except your attention, which we have already taken."],
+  ["7. Cookies", "This website contains no cookies. Please do not ask where they went."],
+  ["8. Language Wars", "No arguments over programming languages are allowed during the event. Tabs versus spaces disputes will be settled with cake."],
+  ["9. Debugging", "The user acknowledges that the problem is usually a missing semicolon, a typo, or whoever wrote the code."],
+  ["10. Warranty", "Provided \"as is\". Guaranteed to work on exactly one machine. Not responsible for sudden outbreaks of fun."],
+  ["11. Time and Space", "The user may be moved to an unspecified deep-space environment. Time dilation may occur. The user should not worry about it, and also should not look back."],
+  ["12. Termination", "These terms cannot be terminated, only rebooted."],
+  ["13. Soul", "The user agrees to give his soul to the creator, the way the user has already give his heart. (Creator will take good care of it)"],
+  ["14. Changes", "The creator may add further clauses at any time without notice, including this one. (You know how the creator is)"]
+];
+
+const DISAGREE_LINES = [
+  "Disagreement noted and ignored.",
+  "Are you sure? Think about the cake. (Yes, it's gluten free)",
+  "The \"I agree\" button is feeling confident.",
+  "It keeps getting bigger. It knows something you don't.",
+  "\"I disagree\" has been removed. Please enjoy the ride."
+];
+
 function onBirthdayConfirmed(overlay) {
+  overlay.innerHTML = "";
+
+  const box = document.createElement("div");
+  box.className = "popup terms";
+
+  const bar = document.createElement("div");
+  bar.className = "bar";
+  bar.innerHTML = "<span>Terms and Conditions</span>";
+  box.appendChild(bar);
+
+  const scroll = document.createElement("div");
+  scroll.className = "tc-scroll";
+  TERMS.forEach(function (t) {
+    const h = document.createElement("h4");
+    h.textContent = t[0];
+    const p = document.createElement("p");
+    p.textContent = t[1];
+    scroll.appendChild(h);
+    scroll.appendChild(p);
+  });
+  const devil = document.createElement("div");
+  devil.id = "devil";
+  devil.textContent = "😈";
+  scroll.appendChild(devil);
+  box.appendChild(scroll);
+
+  const note = document.createElement("div");
+  note.className = "note";
+  box.appendChild(note);
+
+  const row = document.createElement("div");
+  row.className = "tc-buttons";
+  const agree = document.createElement("button");
+  agree.className = "agree";
+  agree.textContent = "I agree";
+  const disagree = document.createElement("button");
+  disagree.textContent = "I disagree";
+  row.appendChild(agree);
+  row.appendChild(disagree);
+  box.appendChild(row);
+
+  overlay.appendChild(box);
+
+  let tries = 0;
+  disagree.onclick = function () {
+    tries++;
+    note.textContent = DISAGREE_LINES[tries - 1];
+    agree.style.fontSize = (14 + tries * 5) + "px";
+    agree.style.padding = (5 + tries * 4) + "px " + (18 + tries * 8) + "px";
+    if (tries >= 5) {
+      disagree.remove();
+      agree.style.width = "100%";
+      devil.classList.add("show");
+      scroll.scrollTo({ top: scroll.scrollHeight, behavior: "smooth" });
+    }
+  };
+
+  agree.onclick = function () { onTermsAccepted(overlay); };
+}
+
+async function onTermsAccepted(overlay) {
   overlay.remove();
-  console.log("confirmed");
-  // next: terms and conditions, then static + glitch, then Interstellar
+  await wait(300);
+  const blackout = await glitch();   // a black full-screen canvas
+  console.log("glitch done");
+  // next: Interstellar starts here
+}
+
+function glitch() {
+  return new Promise(function (resolve) {
+    const W = Math.ceil(window.innerWidth / 4);
+    const H = Math.ceil(window.innerHeight / 4);
+    const cv = document.createElement("canvas");
+    cv.id = "static";
+    cv.width = W;
+    cv.height = H;
+    document.body.appendChild(cv);
+    const ctx = cv.getContext("2d");
+
+    // if the device asks for reduced motion, skip the flicker and just fade to black
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, W, H);
+      cv.style.opacity = 0;
+      cv.style.transition = "opacity 1s";
+      requestAnimationFrame(function () { cv.style.opacity = 1; });
+      setTimeout(function () { resolve(cv); }, 1300);
+      return;
+    }
+
+    const img = ctx.createImageData(W, H);
+    const bars = ["#00ffff", "#ff00ff", "#ffffff"];
+    const start = performance.now();
+    let last = 0;
+    document.documentElement.classList.add("glitching");
+
+    function frame(now) {
+      const t = now - start;
+
+      if (t >= 2300) {   // cut to black
+        document.documentElement.classList.remove("glitching");
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, W, H);
+        cv.style.opacity = 1;
+        setTimeout(function () { resolve(cv); }, 500);
+        return;
+      }
+
+      if (now - last > 50) {   // redraw the noise about 20 times a second
+        last = now;
+        const d = img.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const v = Math.random() * 190;
+          d[i] = d[i + 1] = d[i + 2] = v;
+          d[i + 3] = 255;
+        }
+        ctx.putImageData(img, 0, 0);
+
+        // colored tearing bars
+        for (let b = 0; b < 3; b++) {
+          if (Math.random() < 0.5) {
+            ctx.globalAlpha = 0.45;
+            ctx.fillStyle = bars[b];
+            ctx.fillRect(0, Math.random() * H, W, 1 + Math.random() * (H / 10));
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+
+      // the static fades in: thin at first, then total
+      cv.style.opacity = t < 700 ? 0.15 + 0.25 * (t / 700)
+                       : t < 1700 ? 0.4 + 0.6 * ((t - 700) / 1000)
+                       : 1;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  });
 }
 
 async function playIntro() {
